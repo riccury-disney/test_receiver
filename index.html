@@ -122,7 +122,6 @@
         const conf = {
           key: "79727bd9-f542-46a6-b585-dffd44b18dcf",
           tweaks: {
-            max_buffer_level: 20,
             fairplay_ignore_duplicate_init_data_key_errors: true,
             native_hls_parsing: true,
           },
@@ -136,11 +135,6 @@
             config: {
               enabled: false,
               cookiesEnabled: false,
-            },
-          },
-          events: {
-            metadata: (details) => {
-              console.log("config details:", details);
             },
           },
           ui: false,
