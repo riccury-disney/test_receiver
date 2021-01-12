@@ -139,7 +139,7 @@
             },
           },
           events: {
-            metaData: (details) => {
+            metadata: (details) => {
               console.log("config details:", details);
             },
           },
@@ -166,21 +166,21 @@
           // Handler that takes properties from the remotecontrol.customReceiverConfig configuration for use within the receiver
           googleCastRemoteControlReceiver.setCastMetadataListener(
             (metadata) => {
-              console.log("gcr metadata:", metaData);
-              // switch (metadata.type) {
-              //   case 'customReceiverConfig':
-              //     const customReceiverConfig = metadata.data;
-              //     if (customReceiverConfig.receiverStylesheetUrl != null) {
-              //       const head = document.getElementsByTagName('head')[0];
-              //       const link = document.createElement('link');
-              //       link.rel = 'stylesheet';
-              //       link.type = 'text/css';
-              //       link.href = customReceiverConfig.receiverStylesheetUrl;
-              //       head.appendChild(link);
-              //     }
-              //     break;
-              // }
-              console.log(metaData);
+              console.log("gcr metadata:", metadata);
+              switch (metadata.type) {
+                case "customReceiverConfig":
+                  const customReceiverConfig = metadata.data;
+                  if (customReceiverConfig.receiverStylesheetUrl != null) {
+                    const head = document.getElementsByTagName("head")[0];
+                    const link = document.createElement("link");
+                    link.rel = "stylesheet";
+                    link.type = "text/css";
+                    link.href = customReceiverConfig.receiverStylesheetUrl;
+                    head.appendChild(link);
+                  }
+                  break;
+              }
+              console.log(metadata);
             }
           );
         });
