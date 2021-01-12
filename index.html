@@ -123,8 +123,28 @@
           key: "79727bd9-f542-46a6-b585-dffd44b18dcf",
           tweaks: {
             max_buffer_level: 20,
+            fairplay_ignore_duplicate_init_data_key_errors: true,
+            native_hls_parsing: true,
           },
-          events: {},
+          logs: {
+            bitmovin: false, // turn off Bitmovin' credits in console
+          },
+          licensing: {
+            delay: 10000, // delay license request by 10 seconds
+          },
+          analytics: {
+            config: {
+              enabled: false,
+              cookiesEnabled: false,
+            },
+          },
+          events: {
+            metadata: (details) => {
+              console.log(
+                "The user ID from the sender is: " + details.data.userId
+              );
+            },
+          },
           ui: false,
         };
 
