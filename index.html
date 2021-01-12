@@ -158,6 +158,11 @@
         // Hide overlay when an error happens (avoids hidden errors during startup)
         player.on(bitmovin.player.PlayerEvent.Error, hideStatusOverlay);
 
+        // Update time
+        player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
+          console.log(player.getCurrentTime());
+        });
+
         require(["remotecontrol/GoogleCastRemoteControlReceiver"], (gcr) => {
           const googleCastRemoteControlReceiver = new gcr.GoogleCastRemoteControlReceiver(
             player
