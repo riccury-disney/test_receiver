@@ -140,7 +140,7 @@
           },
           events: {
             metadata: (details) => {
-              console.log(details);
+              console.log("config details:", details);
             },
           },
           ui: false,
@@ -166,6 +166,7 @@
           // Handler that takes properties from the remotecontrol.customReceiverConfig configuration for use within the receiver
           googleCastRemoteControlReceiver.setCastMetadataListener(
             (metadata) => {
+              console.log("gcr metadata:", metaData);
               // switch (metadata.type) {
               //   case 'customReceiverConfig':
               //     const customReceiverConfig = metadata.data;
