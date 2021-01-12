@@ -125,9 +125,11 @@
             max_buffer_level: 20,
           },
           logs: {
-            level: "log",
-            onLog: (a, b, c) => {
-              console.log(a, b, c);
+            level: "debug",
+            onLog: (level, m) => {
+              if (level === "debug") {
+                console.log(m);
+              }
             },
           },
           events: {},
