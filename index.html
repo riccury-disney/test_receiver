@@ -126,6 +126,9 @@
           },
           logs: {
             level: "log",
+            onLog: (a, b, c) => {
+              console.log(a, b, c);
+            },
           },
           events: {},
           ui: false,
