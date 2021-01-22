@@ -135,6 +135,12 @@
       window.onload = () => {
         // Bitmovin Player configuration properties
         const conf = {
+          adaptation: {
+            exclude: true,
+            bitrates: {
+              maxSelectableVideoBitrate: '5000kbps' // Limit Playable Bitrates https://bitmovin.com/bitmovin-video-player-chromecast/
+            }
+          },
           key: "79727bd9-f542-46a6-b585-dffd44b18dcf",
           tweaks: {
             fairplay_ignore_duplicate_init_data_key_errors: true,
@@ -146,11 +152,19 @@
           licensing: {
             delay: 10000, // delay license request by 10 seconds
           },
+          skin: {
+            screenLogoImage: ""
+          },
           analytics: {
             config: {
               enabled: false,
               cookiesEnabled: false,
             },
+          },
+          events: {
+            metadata: (details) => {
+              console.log('Maybe apply correct watermark here? .The user ID from the sender is: ' + details.data.userId);
+            }
           },
           ui: false,
         };
