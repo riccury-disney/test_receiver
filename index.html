@@ -172,6 +172,34 @@
           console.log("Time Changed:", player.getCurrentTime());
         });
 
+        const WATERMARK_TYPES = {
+          userid: {
+            centered: "userid-centered",
+          },
+        };
+
+        const watermarkUserIdCentered = () => {
+          const el = document.querySelector("#watermark");
+
+          if (el) {
+            console.log(el);
+          }
+        };
+
+        const getWatermark = ({ entitlement }) => {
+          if (!entitlement) {
+            return null;
+          }
+
+          switch (entitlement.type) {
+            case WATERMARK_TYPES.userid.centered:
+              watermarkUserIdCentered();
+              break;
+            default:
+              break;
+          }
+        };
+
         require(["remotecontrol/GoogleCastRemoteControlReceiver"], (gcr) => {
           const googleCastRemoteControlReceiver = new gcr.GoogleCastRemoteControlReceiver(
             player
@@ -181,19 +209,20 @@
           googleCastRemoteControlReceiver.setCastMetadataListener(
             (metadata) => {
               console.log("gcr metadata:", metadata);
-              switch (metadata.type) {
-                case "customReceiverConfig":
-                  const customReceiverConfig = metadata.data;
-                  if (customReceiverConfig.receiverStylesheetUrl != null) {
-                    const head = document.getElementsByTagName("head")[0];
-                    const link = document.createElement("link");
-                    link.rel = "stylesheet";
-                    link.type = "text/css";
-                    link.href = customReceiverConfig.receiverStylesheetUrl;
-                    head.appendChild(link);
-                  }
-                  break;
-              }
+              // switch (metadata.type) {
+              //   case "customReceiverConfig":
+              //     const customReceiverConfig = metadata.data;
+              //     if (customReceiverConfig.receiverStylesheetUrl != null) {
+              //       const head = document.getElementsByTagName("head")[0];
+              //       const link = document.createElement("link");
+              //       link.rel = "stylesheet";
+              //       link.type = "text/css";
+              //       link.href = customReceiverConfig.receiverStylesheetUrl;
+              //       head.appendChild(link);
+              //     }
+              //     break;
+              // }
+              getWatermark({ entitlement: metaData.entitlement });
             }
           );
         });
