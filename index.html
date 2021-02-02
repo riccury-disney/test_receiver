@@ -178,11 +178,11 @@
           },
         };
 
-        const watermarkUserIdCentered = () => {
+        const watermarkUserIdCentered = (text) => {
           const el = document.querySelector("#watermark");
 
           if (el) {
-            console.log(el);
+            el.appendChild(<p>{text}</p>);
           }
         };
 
@@ -194,7 +194,7 @@
 
           switch (entitlement.watermarkType) {
             case WATERMARK_TYPES.userid.centered:
-              watermarkUserIdCentered();
+              watermarkUserIdCentered(entitlement.watermarkText);
               break;
             default:
               break;
