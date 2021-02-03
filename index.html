@@ -267,7 +267,7 @@
           el.dispatchEvent(rotateEvent);
 
           el.addEventListener("rotate", function (e) {
-            console.log("rotate event");
+            console.log("rotate event", e);
             setTimeout(() => {
               console.log("rotate");
               el.classList.toggle(position[index]);
