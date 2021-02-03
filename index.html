@@ -264,9 +264,7 @@
             "top-right",
           ];
 
-          el.dispatchEvent(rotateEvent);
-
-          el.addEventListener("rotate", function (e) {
+          el.addEventListener("rotate", (e) => {
             console.log("rotate event", e);
             setTimeout(() => {
               console.log("rotate");
@@ -281,6 +279,8 @@
               el.dispatchEvent(rotateEvent);
             }, getRandomInt(1000, 10000));
           });
+
+          el.dispatchEvent(rotateEvent);
         };
 
         const watermarkUserId = (
