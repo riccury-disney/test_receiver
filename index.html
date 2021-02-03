@@ -318,7 +318,7 @@
           el.append(p);
         };
 
-        const watermarkLogo = (
+        const watermarkLogos = (
           { entitlement, runtime },
           { isTemporary = false, isCornered = false, isRotating = false }
         ) => {
@@ -390,7 +390,7 @@
               break;
             // logo stationary
             case WATERMARK_TYPES.logo.stationary:
-              watermarkLogo();
+              watermarkLogos();
               break;
             // logo temporary
             case WATERMARK_TYPES.logo.temporary:
