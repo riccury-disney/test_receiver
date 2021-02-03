@@ -266,7 +266,7 @@
 
           el.dispatchEvent(rotateEvent);
 
-          el.addEventListener("rotate", () => {
+          el.addEventListener("rotate", function (e) {
             console.log("rotate event");
             setTimeout(() => {
               console.log("rotate");
