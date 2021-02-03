@@ -182,11 +182,6 @@
         // Hide overlay when an error happens (avoids hidden errors during startup)
         player.on(bitmovin.player.PlayerEvent.Error, hideStatusOverlay);
 
-        // Update time
-        // player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
-        //   console.log("Time Changed:", player.getCurrentTime());
-        // });
-
         const WATERMARK_TYPES = {
           userid: {
             centered: "userid-centered",
@@ -194,33 +189,10 @@
           },
         };
 
-        // useEffect(() => {
-        //   if (
-        //     isLogo.rotatingTemporary ||
-        //     isLogo.stationaryTemporary ||
-        //     isUserIdCorner.rotatingTemporary ||
-        //     isUserIdCorner.stationaryTemporary ||
-        //     isUserId.temporary
-        //   ) {
-        //     const runtimeInSeconds = Math.floor(playData.runtime * 60);
-        //     const currentTime = Math.floor(meta.currentTime);
-
-        //     // toggle first watermark 5% into the movie and second at 60%
-        //     if (
-        //       currentTime === runtimeInSeconds * 0.05 ||
-        //       currentTime === runtimeInSeconds * 0.6
-        //     ) {
-        //       setIsVisible(true);
-        //     }
-        //   }
-        // }, [meta.currentTime]);
-
         const handleVisibility = (runtime, el) => {
           const runtimeInSeconds = Math.floor(runtime * 60);
-          console.log("runtime:", runtimeInSeconds);
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
             const currentTime = Math.floor(player.getCurrentTime());
-            console.log("current time:", currentTime);
             if (
               currentTime === runtimeInSeconds * 0.05 ||
               currentTime === runtimeInSeconds * 0.6
@@ -264,14 +236,15 @@
 
           switch (entitlement.watermarkType) {
             case WATERMARK_TYPES.userid.centered:
+              watermarkUserIdCentered({ text: entitlement.watermarkText });
+              break;
+            case WATERMARK_TYPES.userid.temporary:
               watermarkUserIdCentered(
                 { text: entitlement.watermarkText, runtime: data.runtime },
                 {
                   isTemporary: true,
                 }
               );
-              break;
-            case WATERMARK_TYPES.userid.temporary:
               break;
             default:
               break;
