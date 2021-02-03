@@ -91,6 +91,10 @@
         pointer-events: none;
       }
 
+      .hidden {
+        display: none;
+      }
+
       .watermark-userid--center {
         font-size: 2.5vw;
         opacity: 0.3;
@@ -211,16 +215,24 @@
         //   }
         // }, [meta.currentTime]);
 
-        const handleVisibility = (currentTime, totalRuntime, el) => {
+        const handleVisibility = (runtime, el) => {
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
-            if (currentTime === totalRuntime) {
-              el.classList.add("hidden");
+            const runtimeInSeconds = Math.floor(runtime * 60);
+            const currentTime = Math.floor(player.getCurrentTime());
+            el.classList.add("hidden");
+            console.log("current time:", currentTime);
+            console.log("runtime:", runtimeInSeconds);
+            if (
+              currentTime ===
+              (runtimeInSeconds * 0.05 || runtimeInSeconds * 0.6)
+            ) {
+              el.classList.remove("hidden");
             }
           });
         };
 
         const watermarkUserIdCentered = (
-          text,
+          { text, runtime },
           { isTemporary = false } = {}
         ) => {
           const el = document.getElementById("watermark");
@@ -231,11 +243,11 @@
           if (el) {
             el.append(p);
             console.log("temp", isTemporary);
-            isTemporary && handleVisibility(1, 1, p);
+            isTemporary && handleVisibility(runtime, p);
           }
         };
 
-        const getWatermark = ({ entitlement }) => {
+        const getWatermark = ({ entitlement, data }) => {
           console.log(entitlement);
           if (!entitlement) {
             return null;
@@ -243,9 +255,12 @@
 
           switch (entitlement.watermarkType) {
             case WATERMARK_TYPES.userid.centered:
-              watermarkUserIdCentered(entitlement.watermarkText, {
-                isTemporary: true,
-              });
+              watermarkUserIdCentered(
+                { text: entitlement.watermarkText, runtime: data.runtime },
+                {
+                  isTemporary: true,
+                }
+              );
               break;
             case WATERMARK_TYPES.userid.temporary:
               break;
@@ -276,7 +291,10 @@
               //     }
               //     break;
               // }
-              getWatermark({ entitlement: metadata.entitlement });
+              getWatermark({
+                entitlement: metadata.entitlement,
+                data: meta.playData,
+              });
             }
           );
         });
