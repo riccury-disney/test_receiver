@@ -176,9 +176,9 @@
         const watermarkUserIdCentered = (text) => {
           const el = document.getElementById("watermark");
           const p = document.createElement("p");
+          p.textContent = text;
           if (el) {
-            console.log(el, p, text);
-            el.append(text, p);
+            el.append(p);
           }
         };
 
