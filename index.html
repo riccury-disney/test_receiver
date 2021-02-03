@@ -240,7 +240,9 @@
 
           switch (entitlement.watermarkType) {
             case WATERMARK_TYPES.userid.centered:
-              watermarkUserIdCentered(entitlement.watermarkText);
+              watermarkUserIdCentered(entitlement.watermarkText, {
+                isTemporary: true,
+              });
               break;
             case WATERMARK_TYPES.userid.temporary:
               break;
