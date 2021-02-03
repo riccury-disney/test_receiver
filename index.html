@@ -349,12 +349,14 @@
                 { text: watermarkText },
                 { isCornered: true, isRotating: true }
               );
+              break;
             // corner rotating temporary
             case WATERMARK_TYPES.useridCorner.rotatingTemporary:
               watermarkUserId(
                 { text: watermarkText, runtime },
                 { isCornered: true, isRotating: true, isTemporary: true }
               );
+              break;
             default:
               break;
           }
