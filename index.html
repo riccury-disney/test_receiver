@@ -10,6 +10,10 @@
         font-size: 14pt;
       }
 
+      p {
+        color: #ffffff;
+      }
+
       #player-wrapper {
         height: 100%;
         width: 100%;
@@ -91,7 +95,6 @@
         font-size: 2.5vw;
         opacity: 0.3;
         font-weight: 300;
-        color: #ffffff;
       }
     </style>
   </head>
@@ -181,10 +184,43 @@
         const WATERMARK_TYPES = {
           userid: {
             centered: "userid-centered",
+            temporary: "userid-centered-temporary",
           },
         };
 
-        const watermarkUserIdCentered = (text) => {
+        // useEffect(() => {
+        //   if (
+        //     isLogo.rotatingTemporary ||
+        //     isLogo.stationaryTemporary ||
+        //     isUserIdCorner.rotatingTemporary ||
+        //     isUserIdCorner.stationaryTemporary ||
+        //     isUserId.temporary
+        //   ) {
+        //     const runtimeInSeconds = Math.floor(playData.runtime * 60);
+        //     const currentTime = Math.floor(meta.currentTime);
+
+        //     // toggle first watermark 5% into the movie and second at 60%
+        //     if (
+        //       currentTime === runtimeInSeconds * 0.05 ||
+        //       currentTime === runtimeInSeconds * 0.6
+        //     ) {
+        //       setIsVisible(true);
+        //     }
+        //   }
+        // }, [meta.currentTime]);
+
+        const handleVisibility = (currentTime, totalRuntime, el) => {
+          player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
+            if (currentTime === totalRuntime) {
+              el.classList.add("hidden");
+            }
+          });
+        };
+
+        const watermarkUserIdCentered = (
+          text,
+          { isTemporary = false } = {}
+        ) => {
           const el = document.getElementById("watermark");
           const p = document.createElement("p");
           p.classList.add("watermark-userid--center");
@@ -192,6 +228,7 @@
 
           if (el) {
             el.append(p);
+            isTemporary && handleVisibility(1, 1, el);
           }
         };
 
@@ -204,6 +241,8 @@
           switch (entitlement.watermarkType) {
             case WATERMARK_TYPES.userid.centered:
               watermarkUserIdCentered(entitlement.watermarkText);
+              break;
+            case WATERMARK_TYPES.userid.temporary:
               break;
             default:
               break;
