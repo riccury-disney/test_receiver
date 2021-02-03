@@ -222,6 +222,13 @@
           },
         };
 
+        const getRandomInt = (minInput, maxInput) => {
+          const min = Math.ceil(minInput);
+          const max = Math.floor(maxInput);
+
+          return Math.floor(Math.random() * (max - min)) + min;
+        };
+
         const handleVisibility = (runtime, el) => {
           const runtimeInSeconds = Math.floor(runtime * 60);
           console.log(runtimeInSeconds * 0.05);
@@ -242,6 +249,41 @@
           });
         };
 
+        const handleRotation = (el) => {
+          if (!el) {
+            return null;
+          }
+          let index = 0;
+          const rotateEvent = new Event("rotate");
+          const tenSeconds = 10000;
+          const twoMinutes = 120000;
+          const position = [
+            "bottom-right",
+            "bottom-left",
+            "top-left",
+            "top-right",
+          ];
+
+          el.classList.toggle(position[index]);
+          el.dispatchEvent(rotateEvent);
+
+          el.addEventListener("rotate", () => {
+            console.log("rotate event");
+            setTimeout(() => {
+              console.log("rotate");
+              el.classList.toggle(position[index]);
+              index++;
+
+              if (index === 3) {
+                index = 0;
+              }
+
+              el.classList.toggle(position[index]);
+              el.dispatchEvent(rotateEvent);
+            }, getRandomInt(1000, 10000));
+          });
+        };
+
         const watermarkUserId = (
           { text, runtime },
           { isTemporary = false, isCornered = false, isRotating = false }
@@ -249,15 +291,16 @@
           const el = document.getElementById("watermark");
           const p = document.createElement("p");
           p.textContent = text;
+          p.classList.add("watermark-userid");
 
           if (!el) {
             return null;
           }
 
           if (isCornered) {
-            p.classList.add("watermark-userid", "corner", "bottom-right");
+            p.classList.add("corner", "bottom-right");
           } else {
-            p.classList.add("watermark-userid", "center");
+            p.classList.add("center");
           }
 
           if (isTemporary) {
@@ -265,6 +308,10 @@
             handleVisibility(runtime, p);
           }
 
+          if (isRotating) {
+            handleRotation(el);
+          }
+          p.addEventListener();
           el.append(p);
         };
 
@@ -296,6 +343,18 @@
               watermarkUserId(
                 { text: watermarkText, runtime },
                 { isCornered: true, isTemporary: true }
+              );
+            // corner rotating
+            case WATERMARK_TYPES.useridCorner.rotating:
+              watermarkUserId(
+                { text: watermarkText },
+                { isCornered: true, isRotating: true }
+              );
+            // corner rotating temporary
+            case WATERMARK_TYPES.useridCorner.rotatingTemporary:
+              watermarkUserId(
+                { text: watermarkText, runtime },
+                { isCornered: true, isRotating: true, isTemporary: true }
               );
             default:
               break;
