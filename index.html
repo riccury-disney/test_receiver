@@ -216,10 +216,10 @@
         // }, [meta.currentTime]);
 
         const handleVisibility = (runtime, el) => {
+          el.classList.add("hidden");
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
             const runtimeInSeconds = Math.floor(runtime * 60);
             const currentTime = Math.floor(player.getCurrentTime());
-            el.classList.add("hidden");
             console.log("current time:", currentTime);
             console.log("runtime:", runtimeInSeconds);
             if (
