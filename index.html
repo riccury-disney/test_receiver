@@ -179,9 +179,9 @@
         player.on(bitmovin.player.PlayerEvent.Error, hideStatusOverlay);
 
         // Update time
-        player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
-          console.log("Time Changed:", player.getCurrentTime());
-        });
+        // player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
+        //   console.log("Time Changed:", player.getCurrentTime());
+        // });
 
         const WATERMARK_TYPES = {
           userid: {
@@ -212,9 +212,7 @@
         // }, [meta.currentTime]);
 
         const handleVisibility = (currentTime, totalRuntime, el) => {
-          console.log("handle invis");
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
-            console.log("we in the loop");
             if (currentTime === totalRuntime) {
               el.classList.add("hidden");
             }
@@ -233,7 +231,7 @@
           if (el) {
             el.append(p);
             console.log("temp", isTemporary);
-            isTemporary && handleVisibility(1, 1, el);
+            isTemporary && handleVisibility(1, 1, p);
           }
         };
 
