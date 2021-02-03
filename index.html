@@ -75,12 +75,22 @@
       }
 
       #watermark {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        z-index: 10000;
-        left: 100px;
-        top: 100px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .watermark-userid--center {
+        font-size: 2.5vw;
+        opacity: 0.3;
+        font-weight: 300;
       }
     </style>
   </head>
@@ -176,7 +186,9 @@
         const watermarkUserIdCentered = (text) => {
           const el = document.getElementById("watermark");
           const p = document.createElement("p");
+          p.classList.add("watermark-userid--center");
           p.textContent = text;
+
           if (el) {
             el.append(p);
           }
