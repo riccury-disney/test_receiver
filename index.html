@@ -220,6 +220,12 @@
             rotating: "userid-corner-rotating",
             rotatingTemporary: "userid-corner-rotating-temporary",
           },
+          logo: {
+            rotating: "logo-corners",
+            rotatingTemporary: "logo-corners-temporary",
+            stationary: "logo-stationary",
+            temporary: "logo-stationary-temporary",
+          },
         };
 
         const getRandomInt = (minInput, maxInput) => {
@@ -265,9 +271,7 @@
           ];
 
           el.addEventListener("rotate", (e) => {
-            console.log("rotate event", e);
             setTimeout(() => {
-              console.log("rotate");
               el.classList.toggle(position[index]);
               index++;
 
@@ -314,6 +318,33 @@
           el.append(p);
         };
 
+        const watermarkLogo = (
+          { entitlement, runtime },
+          { isTemporary = false, isCornered = false, isRotating = false }
+        ) => {
+          // TODO
+          const html = `<svg viewBox="0 0 200 200" class="logo-svg">
+            <path
+              id="curve"
+              d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+              fill="none"
+              transform="translate(200),scale(-1,1)"
+            />
+            <text width="200">
+              <textPath alignmentBaseline="auto" xlinkHref="#curve">
+                ${entitlement.watermarkText}
+              </textPath>
+            </text>
+          </svg>`;
+          const el = document.getElementById("watermark");
+
+          if (!el) {
+            return null;
+          }
+
+          el.innerHTML = html;
+        };
+
         const getWatermark = ({ entitlement, data }) => {
           console.log(entitlement);
           if (!entitlement || !data) {
@@ -356,6 +387,19 @@
                 { text: watermarkText, runtime },
                 { isCornered: true, isRotating: true, isTemporary: true }
               );
+              break;
+            // logo stationary
+            case WATERMARK_TYPES.logo.stationary:
+              watermarkLogo();
+              break;
+            // logo temporary
+            case WATERMARK_TYPES.logo.temporary:
+              break;
+            // logo rotating
+            case WATERMARK_TYPES.logo.rotating:
+              break;
+            // logo rotating temporary
+            case WATERMARK_TYPES.logo.rotatingTemporary:
               break;
             default:
               break;
