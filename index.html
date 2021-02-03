@@ -187,12 +187,20 @@
             centered: "userid-centered",
             temporary: "userid-centered-temporary",
           },
+          useridCorner: {
+            stationary: "userid-corner",
+            temporary: "userid-corner-temporary",
+            rotating: "userid-corner-rotating",
+            rotatingTemporary: "userid-corner-rotating-temporary",
+          },
         };
 
         const handleVisibility = (runtime, el) => {
           const runtimeInSeconds = Math.floor(runtime * 60);
+
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
             const currentTime = Math.floor(player.getCurrentTime());
+
             if (
               currentTime === runtimeInSeconds * 0.05 ||
               currentTime === runtimeInSeconds * 0.6
@@ -207,17 +215,22 @@
           });
         };
 
-        const watermarkUserIdCentered = (
+        const watermarkUserId = (
           { text, runtime },
-          { isTemporary = false } = {}
+          { isTemporary = false, isCornered = false, isRotating = false }
         ) => {
           const el = document.getElementById("watermark");
           const p = document.createElement("p");
-          p.classList.add("watermark-userid--center");
           p.textContent = text;
 
           if (!el) {
             return null;
+          }
+
+          if (isCornered) {
+            p.classList.add("watermark-userid--corner");
+          } else {
+            p.classList.add("watermark-userid--center");
           }
 
           if (isTemporary) {
@@ -230,22 +243,32 @@
 
         const getWatermark = ({ entitlement, data }) => {
           console.log(entitlement);
-          if (!entitlement) {
+          if (!entitlement || !data) {
             return null;
           }
-
+          const { watermarkText, watermarkLogo } = entitlement;
+          const { runtime } = data;
           switch (entitlement.watermarkType) {
+            // centered stationary
             case WATERMARK_TYPES.userid.centered:
-              watermarkUserIdCentered({ text: entitlement.watermarkText });
+              watermarkUserId({ text: watermarkText });
               break;
+            // centered temporary
             case WATERMARK_TYPES.userid.temporary:
-              watermarkUserIdCentered(
-                { text: entitlement.watermarkText, runtime: data.runtime },
-                {
-                  isTemporary: true,
-                }
+              watermarkUserId(
+                { text: watermarkText, runtime },
+                { isTemporary: true }
               );
               break;
+            // corner stationary
+            case WATERMARK_TYPES.useridCorner.stationary:
+              watermarkUserId({ text: watermarkText }, { isCornered: true });
+              break;
+            case WATERMARK_TYPES.useridCorner.temporary:
+              watermarkUserId(
+                { text: watermarkText },
+                { isCornered: true, isTemporary: true }
+              );
             default:
               break;
           }
@@ -260,19 +283,20 @@
           googleCastRemoteControlReceiver.setCastMetadataListener(
             (metadata) => {
               console.log("gcr metadata:", metadata);
-              // switch (metadata.type) {
-              //   case "customReceiverConfig":
-              //     const customReceiverConfig = metadata.data;
-              //     if (customReceiverConfig.receiverStylesheetUrl != null) {
-              //       const head = document.getElementsByTagName("head")[0];
-              //       const link = document.createElement("link");
-              //       link.rel = "stylesheet";
-              //       link.type = "text/css";
-              //       link.href = customReceiverConfig.receiverStylesheetUrl;
-              //       head.appendChild(link);
-              //     }
-              //     break;
-              // }
+              switch (metadata.type) {
+                case "customReceiverConfig":
+                  const customReceiverConfig = metadata.data;
+                  if (customReceiverConfig.receiverStylesheetUrl != null) {
+                    const head = document.getElementsByTagName("head")[0];
+                    const link = document.createElement("link");
+                    link.rel = "stylesheet";
+                    link.type = "text/css";
+                    link.href = customReceiverConfig.receiverStylesheetUrl;
+                    head.appendChild(link);
+                  }
+                  break;
+              }
+
               getWatermark({
                 entitlement: metadata.entitlement,
                 data: metadata.playData,
