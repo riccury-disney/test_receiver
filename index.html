@@ -318,10 +318,7 @@
           el.append(p);
         };
 
-        const watermarkLogos = (
-          { text, logo, runtime },
-          { isTemporary = false, isCornered = false, isRotating = false }
-        ) => {
+        const watermarkLogos = ({ text, logo, runtime }) => {
           console.log("watermark logo");
           // TODO
           const html = `<svg viewBox="0 0 200 200" class="logo-svg">
@@ -333,7 +330,7 @@
             />
             <text width="200">
               <textPath alignmentBaseline="auto" xlinkHref="#curve">
-                ${entitlement.watermarkText}
+                ${text}
               </textPath>
             </text>
           </svg>`;
