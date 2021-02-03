@@ -226,6 +226,11 @@
               (runtimeInSeconds * 0.05 || runtimeInSeconds * 0.6)
             ) {
               el.classList.remove("hidden");
+
+              const duration = 8000;
+              setTimeout(() => {
+                el.classList.add("hidden");
+              }, duration);
             }
           });
         };
