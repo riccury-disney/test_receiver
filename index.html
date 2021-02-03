@@ -216,7 +216,6 @@
         // }, [meta.currentTime]);
 
         const handleVisibility = (runtime, el) => {
-          el.classList.add("hidden");
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
             const runtimeInSeconds = Math.floor(runtime * 60);
             const currentTime = Math.floor(player.getCurrentTime());
@@ -240,11 +239,16 @@
           p.classList.add("watermark-userid--center");
           p.textContent = text;
 
-          if (el) {
-            el.append(p);
-            console.log("temp", isTemporary);
-            isTemporary && handleVisibility(runtime, p);
+          if (!el) {
+            return null;
           }
+
+          if (isTemporary) {
+            p.classList.add("hidden");
+            handleVisibility(runtime, p);
+          }
+
+          el.append(p);
         };
 
         const getWatermark = ({ entitlement, data }) => {
