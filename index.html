@@ -146,23 +146,7 @@
   </head>
   <body>
     <div id="player-wrapper"></div>
-    <div id="watermark">
-      <div class="logo-container bottom-right">
-        <svg viewBox="0 0 200 200" class="logo-svg">
-          <path
-            id="curve"
-            d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-            fill="none"
-            transform="translate(200),scale(-1,1)"
-          />
-          <text width="200">
-            <textPath alignmentBaseline="auto" xlinkHref="#curve" href="#curve">
-              TXT HERE
-            </textPath>
-          </text>
-        </svg>
-      </div>
-    </div>
+    <div id="watermark"></div>
     <div id="app-status-overlay">
       <div id="app-status-overlay-loading">
         <div class="app-status-overlay-loading-dot"></div>
@@ -355,8 +339,8 @@
           const html = `
           <div class="logo-container bottom-right">
           <svg viewBox="0 0 200 200" class="logo-svg">
-            <path id="curve" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0" fill="none" transform="translate(200),scale(-1,1)" />
-            <text width="200"><textPath alignmentBaseline="auto" xlinkHref="#curve">${text}</textPath></text>
+            <path id="curve" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0" fill="#ffffff" transform="translate(200),scale(-1,1)" />
+            <text width="200"><textPath alignmentBaseline="auto" xlinkHref="#curve" href="#curve">${text}</textPath></text>
           </svg>
           </div>`;
 
@@ -366,7 +350,7 @@
             return null;
           }
 
-          // el.innerHTML = html;
+          el.innerHTML = html;
         };
 
         const getWatermark = ({ entitlement, data }) => {
