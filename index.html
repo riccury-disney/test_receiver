@@ -142,6 +142,8 @@
       };
 
       window.onload = () => {
+        let meta;
+
         // Bitmovin Player configuration properties
         const conf = {
           key: "79727bd9-f542-46a6-b585-dffd44b18dcf",
@@ -210,7 +212,9 @@
         // }, [meta.currentTime]);
 
         const handleVisibility = (currentTime, totalRuntime, el) => {
+          console.log("handle invis");
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
+            console.log("we in the loop");
             if (currentTime === totalRuntime) {
               el.classList.add("hidden");
             }
@@ -228,6 +232,7 @@
 
           if (el) {
             el.append(p);
+            console.log("temp", isTemporary);
             isTemporary && handleVisibility(1, 1, el);
           }
         };
