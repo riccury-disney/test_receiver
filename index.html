@@ -101,6 +101,12 @@
         justify-content: center;
       }
 
+      .logo-img-container {
+        width: 100px;
+        margin: auto;
+        position: absolute;
+      }
+
       .logo-svg {
         width: 100%;
         transform: rotate(160deg);
@@ -108,6 +114,12 @@
 
       .svg-logo-text {
         fill: #ffffff;
+      }
+
+      .logo-img {
+        height: auto !important;
+        width: 100%;
+        z-index: 1;
       }
 
       .hidden {
@@ -338,7 +350,7 @@
         };
 
         const watermarkLogos = ({ text, logo, runtime }) => {
-          console.log("watermark logo");
+          const { url, aspectRatioFractions, alt } = logo;
           // TODO
           const html = `
           <div class="logo-container bottom-right">
@@ -346,6 +358,9 @@
             <path id="curve" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0" fill="none" transform="translate(200),scale(-1,1)" />
             <text class="svg-logo-text"width="200"><textPath alignmentBaseline="auto" xlinkHref="#curve" href="#curve">${text}</textPath></text>
           </svg>
+          <div class="logo-img-container">
+            <img class="logo-img" src="${url}?r=${aspectRatioFractions[0]}" alt="${alt}" />
+          </div>
           </div>`;
 
           const el = document.getElementById("watermark");
