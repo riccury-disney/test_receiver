@@ -35,7 +35,7 @@
         position: absolute;
         transform: translate(-50%, -50%);
         top: 50%;
-        width: 50%;
+        left: 50%;
       }
 
       .loader {
@@ -145,7 +145,7 @@
   <body>
     <div id="player-wrapper"></div>
     <div id="watermark"></div>
-    <div id="appstatus-overlay">
+    <div id="app-status-overlay">
       <div id="app-status-overlay-loading">
         <div class="loader"></div>
       </div>
@@ -180,8 +180,7 @@
     <script type="text/javascript">
       // Hide app loading overlay
       const hideStatusOverlay = () => {
-        document.getElementById("app-status-overlay-loading").style.display =
-          "none";
+        document.getElementById("app-status-overlay").style.display = "none";
       };
 
       window.onload = () => {
