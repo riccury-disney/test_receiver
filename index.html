@@ -22,60 +22,44 @@
 
       #app-status-overlay {
         position: fixed;
-        left: 0;
-        right: 0;
+        z-index: 999;
+        height: 2em;
+        width: 2em;
+        overflow: visible;
+        margin: auto;
         top: 0;
+        left: 0;
         bottom: 0;
+        right: 0;
+      }
+
+      #app-status-overlay:before {
+        content: "";
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        background-color: black;
-        display: table;
+        background-color: rgba(0, 0, 0, 0.3);
       }
 
-      #app-status-overlay-loading {
-        display: table-cell;
-        text-align: center;
-        vertical-align: middle;
+      .loader {
+        border: 8px solid #ffffff; /* Light grey */
+        border-top: 8px solid #236df5; /* Blue */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
       }
 
-      @keyframes app-status-overlay-loading-dot {
+      @keyframes spin {
         0% {
-          opacity: 1;
-        }
-        25% {
-          opacity: 0;
-        }
-        50% {
-          opacity: 0;
-        }
-        75% {
-          opacity: 1;
+          transform: rotate(0deg);
         }
         100% {
-          opacity: 1;
+          transform: rotate(360deg);
         }
-      }
-
-      .app-status-overlay-loading-dot {
-        display: inline-block;
-        width: 2em;
-        height: 2em;
-        border-radius: 50%;
-        background-color: #777;
-        margin: 0.3em;
-        animation: app-status-overlay-loading-dot 4s ease-in infinite;
-      }
-
-      .app-status-overlay-loading-dot:nth-child(1) {
-        animation-delay: 0.25s;
-      }
-
-      .app-status-overlay-loading-dot:nth-child(2) {
-        animation-delay: 0.5s;
-      }
-
-      .app-status-overlay-loading-dot:nth-child(3) {
-        animation-delay: 0.75s;
       }
 
       #watermark {
@@ -89,6 +73,10 @@
         align-items: center;
         justify-content: center;
         pointer-events: none;
+      }
+
+      .bmpui-ui-watermark {
+        display: none;
       }
 
       .logo-container {
@@ -163,12 +151,8 @@
   <body>
     <div id="player-wrapper"></div>
     <div id="watermark"></div>
-    <div id="app-status-overlay">
-      <div id="app-status-overlay-loading">
-        <div class="app-status-overlay-loading-dot"></div>
-        <div class="app-status-overlay-loading-dot"></div>
-        <div class="app-status-overlay-loading-dot"></div>
-      </div>
+    <div id="app-status-overlay-loading">
+      <div class="loader"></div>
     </div>
 
     <link
@@ -200,7 +184,8 @@
     <script type="text/javascript">
       // Hide app loading overlay
       const hideStatusOverlay = () => {
-        document.getElementById("app-status-overlay").style.display = "none";
+        document.getElementById("app-status-overlay-loading").style.display =
+          "none";
       };
 
       window.onload = () => {
