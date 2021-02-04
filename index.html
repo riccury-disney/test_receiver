@@ -20,11 +20,22 @@
         position: fixed;
       }
 
+      #app-status-overlay {
+        content: "";
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
       #app-status-overlay-loading {
         position: absolute;
         transform: translate(-50%, -50%);
         top: 50%;
-        left: 50%;
+        width: 50%;
       }
 
       .loader {
@@ -134,8 +145,10 @@
   <body>
     <div id="player-wrapper"></div>
     <div id="watermark"></div>
-    <div id="app-status-overlay-loading">
-      <div class="loader"></div>
+    <div id="appstatus-overlay">
+      <div id="app-status-overlay-loading">
+        <div class="loader"></div>
+      </div>
     </div>
 
     <link
