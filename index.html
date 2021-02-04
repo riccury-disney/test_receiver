@@ -249,10 +249,8 @@
 
         const handleVisibility = (runtime, el) => {
           const runtimeInSeconds = Math.floor(runtime * 60);
-          console.log(runtimeInSeconds * 0.05);
           player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
             const currentTime = Math.floor(player.getCurrentTime());
-            console.log(currentTime);
             if (
               currentTime === runtimeInSeconds * 0.05 ||
               currentTime === runtimeInSeconds * 0.6
@@ -368,7 +366,6 @@
         };
 
         const getWatermark = ({ entitlement, data }) => {
-          console.log(entitlement);
           if (!entitlement || !data) {
             return null;
           }
@@ -448,7 +445,6 @@
           // Handler that takes properties from the remotecontrol.customReceiverConfig configuration for use within the receiver
           googleCastRemoteControlReceiver.setCastMetadataListener(
             (metadata) => {
-              console.log("gcr metadata:", metadata);
               switch (metadata.type) {
                 case "customReceiverConfig":
                   const customReceiverConfig = metadata.data;
