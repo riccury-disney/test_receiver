@@ -349,7 +349,10 @@
           el.append(p);
         };
 
-        const watermarkLogos = ({ text, logo, runtime }) => {
+        const watermarkLogos = (
+          { text, logo, runtime },
+          { isTemporary = false, isRotating = false }
+        ) => {
           const { url, aspectRatioFractions, alt } = logo;
           // TODO
           const html = `
@@ -370,6 +373,16 @@
           }
 
           container.innerHTML = html;
+
+          if (isTemporary) {
+            container.classList.add("hidden");
+            handleVisibility(runtime, container);
+          }
+
+          if (isRotating) {
+            handleRotation(container);
+          }
+
           el.append(container);
         };
 
@@ -422,12 +435,24 @@
               break;
             // logo temporary
             case WATERMARK_TYPES.logo.temporary:
+              watermarkLogos(
+                { text: watermarkText, logo: watermarkLogo, runtime },
+                { isTemporary: true }
+              );
               break;
             // logo rotating
             case WATERMARK_TYPES.logo.rotating:
+              watermarkLogos(
+                { text: watermarkText, logo: watermarkLogo },
+                { isRotating: true }
+              );
               break;
             // logo rotating temporary
             case WATERMARK_TYPES.logo.rotatingTemporary:
+              watermarkLogos(
+                { text: watermarkText, logo: watermarkLogo, runtime },
+                { isRotating: true, isTemporary: true }
+              );
               break;
             default:
               break;
