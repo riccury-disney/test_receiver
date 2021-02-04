@@ -93,7 +93,7 @@
 
       .logo-container {
         position: absolute;
-        opacity: 0.3;
+        opacity: 0.4;
         letter-spacing: 0.5rem;
         max-width: 200px;
         display: flex;
@@ -353,23 +353,24 @@
           const { url, aspectRatioFractions, alt } = logo;
           // TODO
           const html = `
-          <div class="logo-container bottom-right">
           <svg viewBox="0 0 200 200" class="logo-svg">
             <path id="curve" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0" fill="none" transform="translate(200),scale(-1,1)" />
             <text class="svg-logo-text"width="200"><textPath alignmentBaseline="auto" xlinkHref="#curve" href="#curve">${text}</textPath></text>
           </svg>
           <div class="logo-img-container">
             <img class="logo-img" src="${url}?r=${aspectRatioFractions[0]}" alt="${alt}" />
-          </div>
           </div>`;
 
           const el = document.getElementById("watermark");
+          const container = document.createElement("div");
+          container.classList.add("logo-container", "bottom-right");
 
           if (!el) {
             return null;
           }
 
-          el.innerHTML = html;
+          container.innerHTML = html;
+          el.append(container);
         };
 
         const getWatermark = ({ entitlement, data }) => {
