@@ -181,7 +181,7 @@
     <script type="text/javascript">
       // Hide app loading overlay
       const hideStatusOverlay = () => {
-        document.getElementById("app-status-overlay").style.display = "none";
+        document.getElementById('app-status-overlay').style.display = 'none';
       };
 
       window.onload = () => {
@@ -189,7 +189,7 @@
 
         // Bitmovin Player configuration properties
         const conf = {
-          key: "79727bd9-f542-46a6-b585-dffd44b18dcf",
+          key: '79727bd9-f542-46a6-b585-dffd44b18dcf',
           tweaks: {
             fairplay_ignore_duplicate_init_data_key_errors: true,
             native_hls_parsing: true,
@@ -211,7 +211,7 @@
 
         // Instantiate a Bitmovin player
         const player = new bitmovin.player.Player(
-          document.getElementById("player-wrapper"),
+          document.getElementById('player-wrapper'),
           conf
         );
 
@@ -223,20 +223,20 @@
 
         const WATERMARK_TYPES = {
           userid: {
-            centered: "userid-centered",
-            temporary: "userid-centered-temporary",
+            centered: 'userid-centered',
+            temporary: 'userid-centered-temporary',
           },
           useridCorner: {
-            stationary: "userid-corner",
-            temporary: "userid-corner-temporary",
-            rotating: "userid-corner-rotating",
-            rotatingTemporary: "userid-corner-rotating-temporary",
+            stationary: 'userid-corner',
+            temporary: 'userid-corner-temporary',
+            rotating: 'userid-corner-rotating',
+            rotatingTemporary: 'userid-corner-rotating-temporary',
           },
           logo: {
-            rotating: "logo-corners",
-            rotatingTemporary: "logo-corners-temporary",
-            stationary: "logo-stationary",
-            temporary: "logo-stationary-temporary",
+            rotating: 'logo-corners',
+            rotatingTemporary: 'logo-corners-temporary',
+            stationary: 'logo-stationary',
+            temporary: 'logo-stationary-temporary',
           },
         };
 
@@ -255,11 +255,11 @@
               currentTime === runtimeInSeconds * 0.05 ||
               currentTime === runtimeInSeconds * 0.6
             ) {
-              el.classList.remove("hidden");
+              el.classList.remove('hidden');
 
               const duration = 8000;
               setTimeout(() => {
-                el.classList.add("hidden");
+                el.classList.add('hidden');
               }, duration);
             }
           });
@@ -270,17 +270,17 @@
             return null;
           }
           let index = 0;
-          const rotateEvent = new Event("rotate");
+          const rotateEvent = new Event('rotate');
           const tenSeconds = 10000;
           const twoMinutes = 120000;
           const position = [
-            "bottom-right",
-            "bottom-left",
-            "top-left",
-            "top-right",
+            'bottom-right',
+            'bottom-left',
+            'top-left',
+            'top-right',
           ];
 
-          el.addEventListener("rotate", (e) => {
+          el.addEventListener('rotate', (e) => {
             setTimeout(() => {
               el.classList.toggle(position[index]);
               index++;
@@ -301,23 +301,23 @@
           { text, runtime },
           { isTemporary = false, isCornered = false, isRotating = false }
         ) => {
-          const el = document.getElementById("watermark");
-          const p = document.createElement("p");
+          const el = document.getElementById('watermark');
+          const p = document.createElement('p');
           p.textContent = text;
-          p.classList.add("watermark-userid");
+          p.classList.add('watermark-userid');
 
           if (!el) {
             return null;
           }
 
           if (isCornered) {
-            p.classList.add("corner", "bottom-right");
+            p.classList.add('corner', 'bottom-right');
           } else {
-            p.classList.add("center");
+            p.classList.add('center');
           }
 
           if (isTemporary) {
-            p.classList.add("hidden");
+            p.classList.add('hidden');
             handleVisibility(runtime, p);
           }
 
@@ -343,9 +343,9 @@
             <img class="logo-img" src="${url}?r=${aspectRatioFractions[0]}" alt="${alt}" />
           </div>`;
 
-          const el = document.getElementById("watermark");
-          const container = document.createElement("div");
-          container.classList.add("logo-container", "bottom-right");
+          const el = document.getElementById('watermark');
+          const container = document.createElement('div');
+          container.classList.add('logo-container', 'bottom-right');
 
           if (!el) {
             return null;
@@ -354,7 +354,7 @@
           container.innerHTML = html;
 
           if (isTemporary) {
-            container.classList.add("hidden");
+            container.classList.add('hidden');
             handleVisibility(runtime, container);
           }
 
@@ -437,22 +437,22 @@
           }
         };
 
-        require(["remotecontrol/GoogleCastRemoteControlReceiver"], (gcr) => {
-          const googleCastRemoteControlReceiver = new gcr.GoogleCastRemoteControlReceiver(
-            player
-          );
+        require(['remotecontrol/GoogleCastRemoteControlReceiver'], (gcr) => {
+          const googleCastRemoteControlReceiver =
+            new gcr.GoogleCastRemoteControlReceiver(player);
 
           // Handler that takes properties from the remotecontrol.customReceiverConfig configuration for use within the receiver
           googleCastRemoteControlReceiver.setCastMetadataListener(
             (metadata) => {
+              console.log('metadata', metadata);
               switch (metadata.type) {
-                case "customReceiverConfig":
+                case 'customReceiverConfig':
                   const customReceiverConfig = metadata.data;
                   if (customReceiverConfig.receiverStylesheetUrl != null) {
-                    const head = document.getElementsByTagName("head")[0];
-                    const link = document.createElement("link");
-                    link.rel = "stylesheet";
-                    link.type = "text/css";
+                    const head = document.getElementsByTagName('head')[0];
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
                     link.href = customReceiverConfig.receiverStylesheetUrl;
                     head.appendChild(link);
                   }
@@ -468,9 +468,8 @@
         });
 
         // Load the built-in Bitmovin Cast Receiver UI
-        const uimanager = bitmovin.playerui.UIFactory.buildDefaultCastReceiverUI(
-          player
-        );
+        const uimanager =
+          bitmovin.playerui.UIFactory.buildDefaultCastReceiverUI(player);
       };
     </script>
   </body>
