@@ -306,10 +306,13 @@
           const p = document.createElement('p');
           p.textContent = text;
           p.classList.add('watermark-userid');
-          console.log('el', el);
+
           if (!el) {
+            console.log('no element');
             return null;
           }
+
+          console.log('element is found');
 
           if (isCornered) {
             p.classList.add('corner', 'bottom-right');
