@@ -299,7 +299,7 @@
 
         const watermarkUserId = (
           { text, runtime },
-          { isTemporary = false, isCornered = false, isRotating = false }
+          { isTemporary = false, isCornered = false, isRotating = false } = {}
         ) => {
           const el = document.getElementById('watermark');
           const p = document.createElement('p');
