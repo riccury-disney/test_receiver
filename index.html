@@ -301,14 +301,12 @@
           { text, runtime },
           { isTemporary = false, isCornered = false, isRotating = false }
         ) => {
-          console.log('watermark user id', text, 'runtime', runtime);
           const el = document.getElementById('watermark');
           const p = document.createElement('p');
           p.textContent = text;
           p.classList.add('watermark-userid');
 
           if (!el) {
-            console.log('no element');
             return null;
           }
 
