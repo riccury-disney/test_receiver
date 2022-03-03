@@ -366,6 +366,7 @@
         };
 
         const getWatermark = ({ entitlement, data }) => {
+          console.log('get watermark', entitlement, data);
           if (!entitlement || !data) {
             return null;
           }
