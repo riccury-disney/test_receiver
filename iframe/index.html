@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-10:40am
+10:50am
 <button onclick="myFunctionA()">Try it Sync</button>
   <button onclick="myFunctionC()">Try it Async, creting window before callling method</button>
  <button onclick="myFunctionB()">Try it Async, creting window before callling method</button>
@@ -32,7 +32,7 @@ function myFunctionC() {
     setTimeout(() => {
       windowReference.location = url;
     })
-  } 
+  })
 }                 
 </script>
 
