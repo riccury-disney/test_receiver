@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
+  
+<script src="https://www.disneycreativeexperience.com/assets/menu-lib/js/jquery3.5.1.min.js"></script>
+<script src="https://www.disneycreativeexperience.com/assets/menu-lib/js/jquery.nice-select.min.js"></script>
+  
 <body>
-10:50am
-<button onclick="myFunctionA()">Try it Sync</button>
-  <button onclick="myFunctionC()">Try it Async, creting window before callling method</button>
- <button onclick="myFunctionB()">Try it Async, creting window before callling method</button>
+
+<button onclick="myFunctionA()">Open Debut - Sync call</button>
+<button onclick="myFunctionB()">Open Debut - Async call</button>
+<button onclick="myFunctionC()">Open Debut - JQuery</button>
 
 <script>
 function myFunctionA() {
    setTimeout(() => {
-      window.open ("https://debut.disney.com", "new","_blank").focus();
+      window.open ("https://debut.disney.com","_blank").focus();
    })
 }
  
@@ -18,21 +22,24 @@ async function getUrlAsync() {
 }
  
 function myFunctionB() {
-  var windowReference = window.open();
-  
   getUrlAsync().then(function(url) {
     setTimeout(() => {
-      windowReference.location = url;
+      window.open(url,"_blank").focus();
     })
   }); 
 }
  
 function myFunctionC() {
-  getUrlAsync().then(function(url) {
+    $.post("ajax/test.html", 
+         function( data ) {
+            //Do nothing, as sample call will always fail
+          }
+  ).always(function() {
+    alert( "finished" );
     setTimeout(() => {
-      windowReference.location = url;
+      window.open ("https://debut.disney.com","_blank").focus();
     })
-  })
+  });
 }                 
 </script>
 
