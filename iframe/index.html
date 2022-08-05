@@ -8,7 +8,9 @@
 
 <button onclick="myFunctionA()">Open Debut - Sync call</button>
 <button onclick="myFunctionB()">Open Debut - Async call</button>
-<button onclick="myFunctionC()">Open Debut - JQuery</button>
+<button onclick="myFunctionC()">Open Debut - JQuery post</button>
+<button onclick="myFunctionD()">Open Debut - JQuery Ajax Async</button>
+<button onclick="myFunctionE()">Open Debut - JQuery Ajax Sync</button>
 
 <script>
 function myFunctionA() {
@@ -40,7 +42,30 @@ function myFunctionC() {
       window.open ("https://debut.disney.com","_blank").focus();
     })
   });
-}                 
+}    
+  
+  
+function myFunctionD() {
+ 
+  $.ajax({url: "https://riccury-disney.github.io/test_receiver/iframe/", success: function(result){
+      window.open ("https://debut.disney.com","_blank").focus();
+  }});
+  
+}
+  
+function myFunctionE() {
+ 
+  $.ajax(
+    {
+      url: "https://riccury-disney.github.io/test_receiver/iframe/", 
+      success: function(result){
+        window.open ("https://debut.disney.com","_blank").focus();
+      }, 
+      "async": false}
+  );
+  
+}
+  
 </script>
 
 </body>
