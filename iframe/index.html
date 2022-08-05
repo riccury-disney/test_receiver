@@ -2,21 +2,38 @@
 <html>
 <body>
 
-<h1>The Window Object</h1>
-<h2>The open() Method</h2>
-
-<p>Click the button to open a new browser window.</p>
-
-<button onclick="myFunction()">Try it</button>
+<button onclick="myFunctionA()">Try it Sync</button>
+  <button onclick="myFunctionC()">Try it Async, creting window before callling method</button>
+ <button onclick="myFunctionB()">Try it Async, creting window before callling method</button>
 
 <script>
-function myFunction() {
- // window.open("https://debut.disney.com", "new");
-setTimeout(() => {
-                // window.open (link,"_blank","scrollbars=no,resizable=no,status=no,location=no,toolbar=no,       menubar=no,width=960,height=580,left=100,top=100");
-                window.open ("https://debut.disney.com", "new","_blank").focus();
-            })
+function myFunctionA() {
+   setTimeout(() => {
+      window.open ("https://debut.disney.com", "new","_blank").focus();
+   })
 }
+ 
+async function getUrlAsync() {
+  return "https://debut.disney.com";
+}
+ 
+function async myFunctionB() {
+  var windowReference = window.open();
+  
+  getUrlAsync().then(function(url) {
+    setTimeout(() => {
+      windowReference.location = url;
+    })
+  }); 
+}
+ 
+function async myFunctionC() {
+  getUrlAsync().then(function(url) {
+    setTimeout(() => {
+      windowReference.location = url;
+    })
+  } 
+}                 
 </script>
 
 </body>
