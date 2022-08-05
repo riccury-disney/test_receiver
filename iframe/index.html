@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-
+10:40am
 <button onclick="myFunctionA()">Try it Sync</button>
   <button onclick="myFunctionC()">Try it Async, creting window before callling method</button>
  <button onclick="myFunctionB()">Try it Async, creting window before callling method</button>
@@ -17,7 +17,7 @@ async function getUrlAsync() {
   return "https://debut.disney.com";
 }
  
-function async myFunctionB() {
+function myFunctionB() {
   var windowReference = window.open();
   
   getUrlAsync().then(function(url) {
@@ -27,7 +27,7 @@ function async myFunctionB() {
   }); 
 }
  
-function async myFunctionC() {
+function myFunctionC() {
   getUrlAsync().then(function(url) {
     setTimeout(() => {
       windowReference.location = url;
