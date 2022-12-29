@@ -1,71 +1,11 @@
 <!DOCTYPE html>
 <html>
   
-<script src="https://www.disneycreativeexperience.com/assets/menu-lib/js/jquery3.5.1.min.js"></script>
-<script src="https://www.disneycreativeexperience.com/assets/menu-lib/js/jquery.nice-select.min.js"></script>
+<script src="https://na-admin.eventscloud.com/widgets/static/embed/embed-0.0.1.min.js"></script>
   
 <body>
 
-<button onclick="myFunctionA()">Open Debut - Sync call</button>
-<button onclick="myFunctionB()">Open Debut - Async call</button>
-<button onclick="myFunctionC()">Open Debut - JQuery post</button>
-<button onclick="myFunctionD()">Open Debut - JQuery Ajax Async</button>
-<button onclick="myFunctionE()">Open Debut - XMLHttpRequest</button>
-
-<script>
-function myFunctionA() {
-   setTimeout(() => {
-      window.open ("https://debut.disney.com","_blank").focus();
-   })
-}
- 
-async function getUrlAsync() {
-  return "https://debut.disney.com";
-}
- 
-function myFunctionB() {
-  getUrlAsync().then(function(url) {
-    setTimeout(() => {
-      window.open(url,"_blank").focus();
-    })
-  }); 
-}
- 
-function myFunctionC() {
-    $.post("ajax/test.html", 
-         function( data ) {
-            //Do nothing, as sample call will always fail
-          }
-  ).always(function() {
-    alert( "finished" );
-    setTimeout(() => {
-      window.open ("https://debut.disney.com","_blank").focus();
-    })
-  });
-}    
+<div class="aventri-widget" data-type="CalendarWidget" data-widgetid="156835" data-accountid="3979" data-language="eng"></div>
   
-  
-function myFunctionD() {
- 
-  $.ajax({url: "https://riccury-disney.github.io/test_receiver/iframe/", success: function(result){
-      window.open ("https://debut.disney.com","_blank").focus();
-  }});
-  
-}
-  
-function myFunctionE() {
- 
-  
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    window.open ("https://debut.disney.com","_blank");
-  };
-  xhttp.open("GET", "https://riccury-disney.github.io/test_receiver/iframe/", true);
-  xhttp.send();
-    
-}
-  
-</script>
-
 </body>
 </html>
