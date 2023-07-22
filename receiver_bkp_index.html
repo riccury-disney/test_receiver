@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <style>
+      body {
+        margin: 0;
+        background-color: black;
+        font-size: 14pt;
+      }
+
+      p {
+        color: #ffffff;
+      }
+
+      #player-wrapper {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+      }
+
+      #app-status-overlay {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        display: block;
+      }
+
+      #app-status-overlay-loading {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+      }
+
+      .loader {
+        border: 8px solid #ffffff; /* Light grey */
+        border-top: 8px solid #236df5; /* Blue */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #watermark {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .bmpui-ui-watermark {
+        display: none;
+      }
+
+      .logo-container {
+        position: absolute;
+        opacity: 0.4;
+        letter-spacing: 0.5rem;
+        max-width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo-img-container {
+        width: 100px;
+        margin: auto;
+        position: absolute;
+      }
+
+      .logo-svg {
+        width: 100%;
+        transform: rotate(160deg);
+      }
+
+      .svg-logo-text {
+        fill: #ffffff;
+      }
+
+      .logo-img {
+        height: auto !important;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .watermark-userid {
+        font-size: 2.5vw;
+        opacity: 0.3;
+        font-weight: 300;
+      }
+
+      .watermark-userid.corner {
+        position: absolute;
+        letter-spacing: 0.5rem;
+        max-width: none;
+        font-size: 1.5vw;
+      }
+
+      .bottom-right {
+        bottom: 15%;
+        right: 5%;
+      }
+
+      .bottom-left {
+        bottom: 15%;
+        left: 5%;
+      }
+
+      .top-left {
+        top: 15%;
+        left: 5%;
+      }
+
+      .top-right {
+        top: 15%;
+        right: 5%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="player-wrapper"></div>
+    <div id="watermark"></div>
+    <div id="app-status-overlay">
+      <div id="app-status-overlay-loading">
+        <div class="loader"></div>
+      </div>
+    </div>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.bitmovin.com/player/web/8/bitmovinplayer-ui.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.bitmovin.com/player/web/8/bitmovinplayer-ui.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.bitmovin.com/player/web/8/bitmovinplayer.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.js"
+      integrity="sha256-uvyqD81XGEqlTzEGkl+5L73IUlWTXtdLhfnUG5n3FbE="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.bitmovin.com/player/cast/8.14.1-2/bitmovinplayer-remotereceiver.js"
+    ></script>
+    <script type="text/javascript">
+      // Hide app loading overlay
+      const hideStatusOverlay = () => {
+        document.getElementById('app-status-overlay').style.display = 'none';
+      };
+
+      window.onload = () => {
+        let meta;
+
+        // Bitmovin Player configuration properties
+        const conf = {
+          key: '79727bd9-f542-46a6-b585-dffd44b18dcf',
+          tweaks: {
+            fairplay_ignore_duplicate_init_data_key_errors: true,
+            native_hls_parsing: true,
+          },
+          logs: {
+            bitmovin: false, // turn off Bitmovin' credits in console
+          },
+          licensing: {
+            delay: 10000, // delay license request by 10 seconds
+          },
+          analytics: {
+            config: {
+              enabled: false,
+              cookiesEnabled: false,
+            },
+          },
+          ui: false,
+        };
+
+        // Instantiate a Bitmovin player
+        const player = new bitmovin.player.Player(
+          document.getElementById('player-wrapper'),
+          conf
+        );
+
+        // Hide loading overlay when a source is loaded
+        player.on(bitmovin.player.PlayerEvent.SourceLoaded, hideStatusOverlay);
+
+        // Hide overlay when an error happens (avoids hidden errors during startup)
+        player.on(bitmovin.player.PlayerEvent.Error, hideStatusOverlay);
+
+        const WATERMARK_TYPES = {
+          userid: {
+            centered: 'userid-centered',
+            temporary: 'userid-centered-temporary',
+          },
+          useridCorner: {
+            stationary: 'userid-corner',
+            temporary: 'userid-corner-temporary',
+            rotating: 'userid-corner-rotating',
+            rotatingTemporary: 'userid-corner-rotating-temporary',
+          },
+          logo: {
+            rotating: 'logo-corners',
+            rotatingTemporary: 'logo-corners-temporary',
+            stationary: 'logo-stationary',
+            temporary: 'logo-stationary-temporary',
+          },
+        };
+
+        const getRandomInt = (minInput, maxInput) => {
+          const min = Math.ceil(minInput);
+          const max = Math.floor(maxInput);
+
+          return Math.floor(Math.random() * (max - min)) + min;
+        };
+
+        const handleVisibility = (runtime, el) => {
+          const runtimeInSeconds = Math.floor(runtime * 60);
+          player.on(bitmovin.player.PlayerEvent.TimeChanged, () => {
+            const currentTime = Math.floor(player.getCurrentTime());
+            if (
+              currentTime === runtimeInSeconds * 0.05 ||
+              currentTime === runtimeInSeconds * 0.6
+            ) {
+              el.classList.remove('hidden');
+
+              const duration = 8000;
+              setTimeout(() => {
+                el.classList.add('hidden');
+              }, duration);
+            }
+          });
+        };
+
+        const handleRotation = (el) => {
+          if (!el) {
+            return null;
+          }
+          let index = 0;
+          const rotateEvent = new Event('rotate');
+          const tenSeconds = 10000;
+          const twoMinutes = 120000;
+          const position = [
+            'bottom-right',
+            'bottom-left',
+            'top-left',
+            'top-right',
+          ];
+
+          el.addEventListener('rotate', (e) => {
+            setTimeout(() => {
+              el.classList.toggle(position[receiver_bkp_index]);
+              receiver_bkp_index++;
+
+              if (receiver_bkp_index === 4) {
+                receiver_bkp_index = 0;
+              }
+
+              el.classList.toggle(position[receiver_bkp_index]);
+              el.dispatchEvent(rotateEvent);
+            }, getRandomInt(1000, 10000));
+          });
+
+          el.dispatchEvent(rotateEvent);
+        };
+
+        const watermarkUserId = (
+          { text, runtime },
+          { isTemporary = false, isCornered = false, isRotating = false } = {}
+        ) => {
+          const el = document.getElementById('watermark');
+          const p = document.createElement('p');
+          p.textContent = text;
+          p.classList.add('watermark-userid');
+
+          if (!el) {
+            return null;
+          }
+
+          console.log('element is found');
+
+          if (isCornered) {
+            p.classList.add('corner', 'bottom-right');
+          } else {
+            p.classList.add('center');
+          }
+
+          if (isTemporary) {
+            p.classList.add('hidden');
+            handleVisibility(runtime, p);
+          }
+
+          if (isRotating) {
+            handleRotation(p);
+          }
+
+          el.append(p);
+        };
+
+        const watermarkLogos = (
+          { text, logo, runtime },
+          { isTemporary = false, isRotating = false }
+        ) => {
+          const { url, aspectRatioFractions, alt } = logo;
+          // TODO
+          const html = `
+          <svg viewBox="0 0 200 200" class="logo-svg">
+            <path id="curve" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0" fill="none" transform="translate(200),scale(-1,1)" />
+            <text class="svg-logo-text"width="200"><textPath alignmentBaseline="auto" xlinkHref="#curve" href="#curve">${text}</textPath></text>
+          </svg>
+          <div class="logo-img-container">
+            <img class="logo-img" src="${url}?r=${aspectRatioFractions[0]}" alt="${alt}" />
+          </div>`;
+
+          const el = document.getElementById('watermark');
+          const container = document.createElement('div');
+          container.classList.add('logo-container', 'bottom-right');
+
+          if (!el) {
+            return null;
+          }
+
+          container.innerHTML = html;
+
+          if (isTemporary) {
+            container.classList.add('hidden');
+            handleVisibility(runtime, container);
+          }
+
+          if (isRotating) {
+            handleRotation(container);
+          }
+
+          el.append(container);
+        };
+
+        const getWatermark = ({ entitlement, data }) => {
+          console.log('get watermark', entitlement, data);
+          if (!entitlement || !data) {
+            return null;
+          }
+          const { watermarkText, watermarkLogo } = entitlement;
+          const { runtime } = data;
+          switch (entitlement.watermarkType) {
+            // centered stationary
+            case WATERMARK_TYPES.userid.centered:
+              watermarkUserId({ text: watermarkText });
+              break;
+            // centered temporary
+            case WATERMARK_TYPES.userid.temporary:
+              watermarkUserId(
+                { text: watermarkText, runtime },
+                { isTemporary: true }
+              );
+              break;
+            // corner stationary
+            case WATERMARK_TYPES.useridCorner.stationary:
+              watermarkUserId({ text: watermarkText }, { isCornered: true });
+              break;
+            // corner temporary
+            case WATERMARK_TYPES.useridCorner.temporary:
+              watermarkUserId(
+                { text: watermarkText, runtime },
+                { isCornered: true, isTemporary: true }
+              );
+            // corner rotating
+            case WATERMARK_TYPES.useridCorner.rotating:
+              watermarkUserId(
+                { text: watermarkText },
+                { isCornered: true, isRotating: true }
+              );
+              break;
+            // corner rotating temporary
+            case WATERMARK_TYPES.useridCorner.rotatingTemporary:
+              watermarkUserId(
+                { text: watermarkText, runtime },
+                { isCornered: true, isRotating: true, isTemporary: true }
+              );
+              break;
+            // logo stationary
+            case WATERMARK_TYPES.logo.stationary:
+              watermarkLogos({ text: watermarkText, logo: watermarkLogo });
+              break;
+            // logo temporary
+            case WATERMARK_TYPES.logo.temporary:
+              watermarkLogos(
+                { text: watermarkText, logo: watermarkLogo, runtime },
+                { isTemporary: true }
+              );
+              break;
+            // logo rotating
+            case WATERMARK_TYPES.logo.rotating:
+              watermarkLogos(
+                { text: watermarkText, logo: watermarkLogo },
+                { isRotating: true }
+              );
+              break;
+            // logo rotating temporary
+            case WATERMARK_TYPES.logo.rotatingTemporary:
+              watermarkLogos(
+                { text: watermarkText, logo: watermarkLogo, runtime },
+                { isRotating: true, isTemporary: true }
+              );
+              break;
+            default:
+              break;
+          }
+        };
+
+        require(['remotecontrol/GoogleCastRemoteControlReceiver'], (gcr) => {
+          const googleCastRemoteControlReceiver =
+            new gcr.GoogleCastRemoteControlReceiver(player);
+
+          // Handler that takes properties from the remotecontrol.customReceiverConfig configuration for use within the receiver
+          googleCastRemoteControlReceiver.setCastMetadataListener(
+            (metadata) => {
+              console.log('metadata', metadata);
+              switch (metadata.type) {
+                case 'customReceiverConfig':
+                  const customReceiverConfig = metadata.data;
+                  if (customReceiverConfig.receiverStylesheetUrl != null) {
+                    const head = document.getElementsByTagName('head')[0];
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = customReceiverConfig.receiverStylesheetUrl;
+                    head.appendChild(link);
+                  }
+                  break;
+              }
+
+              getWatermark({
+                entitlement: metadata.data.entitlement,
+                data: metadata.data.playData,
+              });
+            }
+          );
+        });
+
+        // Load the built-in Bitmovin Cast Receiver UI
+        const uimanager =
+          bitmovin.playerui.UIFactory.buildDefaultCastReceiverUI(player);
+      };
+    </script>
+  </body>
+</html>
